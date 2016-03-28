@@ -1,5 +1,5 @@
 #include<iostream>
-
+#include<cstring>
 #define SIZE 81
 
 using namespace std;
@@ -8,19 +8,19 @@ class Sudoku{
         Sudoku();
         Sudoku(const int init_board[]);
         
-        void giveQuestion();
+        void giveQuestion();//出題
         void readIn();
         void solve();
-        void changeNum(int a,int b);
-        void changeRow(int a,int b);
-        void changeCol(int a,int b);
-        void rotate(int n);
-        void flip(int n);
-        void transform();
+        void changeNum(int a,int b);//換數字
+        void changeRow(int a,int b);//換大列
+        void changeCol(int a,int b);//換大行
+        void rotate(int n);//旋轉n*90度
+        void flip(int n);//n=0,垂直鏡射;n=1,水平鏡射
+        void transform();//再出題
         
         void setBoard(const int set_board[]);
         int getElement(int index);
         void printBoard();
     private:
-        int board[SIZE]
+        int _board[SIZE];
 };
