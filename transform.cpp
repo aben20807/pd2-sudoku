@@ -6,7 +6,8 @@ int main()
     ss.readIn();
     //ss.changeNum(1,2);
     //ss.changeRow(0,2);
-    ss.changeCol(0,2);
+    //ss.changeCol(0,2);
+    ss.rotate(7);
     ss.printBoard();
     return 0;
 }

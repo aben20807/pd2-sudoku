@@ -98,8 +98,37 @@ void Sudoku::changeCol(int a,int b)
         _board[j]=tmp;
     }
 }
-void rotate(int n)
+void Sudoku::rotate(int n)
 {
     n%=4;
-
+    //cout<<n<<endl;
+    int i,j,tmp;
+    int tmpBoard[SIZE];
+    for(i=0;i<SIZE;i++)
+    {
+        tmpBoard[i]=_board[i];
+    }
+    if(n==0);
+    else if(n==1)
+    { 
+        for(i=0,j=8;i<SIZE;i++,j+=(((j+9)>80)?(-73):9))
+        {
+            _board[j]=tmpBoard[i];
+        }
+    }
+    else if(n==2)
+    {
+        for(i=0,j=80;i<SIZE;i++,j--)
+        {
+            _board[i]=tmpBoard[j];
+        }
+    }
+    else if(n==3)
+    { 
+        for(i=0,j=8;i<SIZE;i++,j+=(((j+9)>80)?(-73):9))
+        {
+            _board[i]=tmpBoard[j];
+        }
+    }
+    else;
 }

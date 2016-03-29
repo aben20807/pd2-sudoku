@@ -1,5 +1,6 @@
 #include<iostream>
 #include<cstring>
+#include<vector>
 #define SIZE 81
 
 using namespace std;
@@ -23,4 +24,6 @@ class Sudoku{
         void printBoard();
     private:
         int _board[SIZE];
+        //vector<int> _board;
+        //_board.reserve(81);
 };
