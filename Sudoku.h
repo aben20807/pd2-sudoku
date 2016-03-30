@@ -1,6 +1,7 @@
 #include<iostream>
 #include<cstring>
-#include<vector>
+#include<cstdlib>
+//#include<vector>
 #define SIZE 81
 
 using namespace std;

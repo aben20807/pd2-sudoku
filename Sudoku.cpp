@@ -103,14 +103,14 @@ void Sudoku::rotate(int n)
     n%=4;
     //cout<<n<<endl;
     int i,j,tmp;
-    int tmpBoard[SIZE];
-    for(i=0;i<SIZE;i++)
-    {
-        tmpBoard[i]=_board[i];
-    }
     if(n==0);
     else if(n==1)
     { 
+        int tmpBoard[SIZE];
+        for(i=0;i<SIZE;i++)
+        {
+            tmpBoard[i]=_board[i];
+        }
         for(i=0,j=8;i<SIZE;i++,j+=(((j+9)>80)?(-73):9))
         {
             _board[j]=tmpBoard[i];
@@ -118,6 +118,11 @@ void Sudoku::rotate(int n)
     }
     else if(n==2)
     {
+        int tmpBoard[SIZE];
+        for(i=0;i<SIZE;i++)
+        {
+            tmpBoard[i]=_board[i];
+        }
         for(i=0,j=80;i<SIZE;i++,j--)
         {
             _board[i]=tmpBoard[j];
@@ -125,10 +130,73 @@ void Sudoku::rotate(int n)
     }
     else if(n==3)
     { 
+        int tmpBoard[SIZE];
+        for(i=0;i<SIZE;i++)
+        {
+            tmpBoard[i]=_board[i];
+        }
         for(i=0,j=8;i<SIZE;i++,j+=(((j+9)>80)?(-73):9))
         {
             _board[i]=tmpBoard[j];
         }
     }
     else;
+}
+void Sudoku::flip(int n)
+{
+    int i,j,tmp;
+    if(n==0)
+    {
+        for(i=0,j=72;i<36;i++,j+=((j%9==8)?(-17):1))
+        {
+            tmp=_board[i];
+            _board[i]=_board[j];
+            _board[j]=tmp;
+        }
+    }
+    else if(n==1)
+    {
+        for(i=0,j=8;i<75;i+=((i%4==3)?6:1),j+=((j%4==1)?11:(-1)))
+        {
+            tmp=_board[i];
+            _board[i]=_board[j];
+            _board[j]=tmp;
+        }
+    }
+    else;
+}
+void Sudoku::transform()
+{
+    srandom(time(NULL));
+    int a,b;
+    //#define DEBUG_1//test random output
+    a=random()%9+1;
+    b=random()%9+1;
+    #ifdef DEBUG_1
+        cout<<a<<" "<<b<<endl;
+    #endif
+    changeNum(a,b);
+    a=random()%3;
+    b=random()%3;
+    #ifdef DEBUG_1
+        cout<<a<<" "<<b<<endl;
+    #endif
+    changeRow(a,b);
+    a=random()%3;
+    b=random()%3;
+    #ifdef DEBUG_1
+        cout<<a<<" "<<b<<endl;
+    #endif
+    changeCol(a,b);
+    a=random()%101;
+    #ifdef DEBUG_1
+        cout<<a<<endl;
+    #endif
+    rotate(a);
+    a=random()%2;
+    #ifdef DEBUG_1
+        cout<<a<<endl;
+    #endif
+    flip(a);
+    printBoard();
 }
