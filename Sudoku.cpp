@@ -88,39 +88,59 @@ bool Sudoku::checkCorrect()
             {
                 return false;
             }
-            //i-=18;
             num++;
         }
     }
 }
 void Sudoku::giveQuestion()
 {
-    int give_board[SIZE]={0,0,7,0,0,2,0,0,0,
-                    0,1,0,0,0,0,0,0,9,
-                    0,5,0,0,4,0,0,0,6,
-                    0,9,0,0,0,0,0,0,1,
-                    0,7,0,5,0,0,0,3,0,
-                    6,0,0,0,0,7,0,5,0,
-                    4,0,0,0,6,0,0,2,0,
-                    8,0,0,0,0,0,0,1,0,
-                    0,0,0,1,0,0,3,0,0
+    /*int give_board[SIZE]={0,0,7,0,0,2,0,0,0,
+                        0,1,0,0,0,0,0,0,9,
+                        0,5,0,0,4,0,0,0,6,
+                        0,9,0,0,0,0,0,0,1,
+                        0,7,0,5,0,0,0,3,0,
+                        6,0,0,0,0,7,0,5,0,
+                        4,0,0,0,6,0,0,2,0,
+                        8,0,0,0,0,0,0,1,0,
+                        0,0,0,1,0,0,3,0,0
+    };*/
+    int give_board[SIZE]={8,0,0,0,0,0,0,0,0,
+                        0,0,3,6,0,0,0,0,0,
+                        0,7,0,0,9,0,2,0,0,
+                        0,0,0,0,0,7,0,0,0,
+                        0,0,0,0,4,5,7,0,0,
+                        0,0,0,1,0,0,0,3,0,
+                        0,0,1,0,0,0,0,6,8,
+                        0,0,8,5,0,0,0,1,0,
+                        0,9,0,0,0,0,4,0,0
+
     };
     setBoard(give_board);
-    printBoard();
+    transform();
+    //printBoard();
 }
 void Sudoku::readIn()
 {
     int i;
     int in_board[SIZE];
+    _zeronum=0;
     for(i=0;i<SIZE;i++)
     {
         cin>>in_board[i];
+        if(in_board[i]==0)
+        {
+            _zeronum++;
+        }
     }
     setBoard(in_board);
 }
-void solve()
+void Sudoku::solve()
 {
-
+    //cout<<_zeronum<<endl;
+    if(_zeronum>64)
+    {
+        cout<<2<<endl;
+    }
 }
 void Sudoku::changeNum(int a,int b)
 {

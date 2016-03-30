@@ -1,3 +1,4 @@
 *.o
 *.exe
 transform.exe.stackdump
+*.in

@@ -14,12 +14,12 @@ class Sudoku{
         void giveQuestion();//出題
         void readIn();
         void solve();
-        void changeNum(int a,int b);//換數字
-        void changeRow(int a,int b);//換大列
-        void changeCol(int a,int b);//換大行
-        void rotate(int n);//旋轉n*90度
-        void flip(int n);//n=0,垂直鏡射;n=1,水平鏡射
-        void transform();//再出題
+        void changeNum(int a,int b);
+        void changeRow(int a,int b);//change group row(include 3 row)
+        void changeCol(int a,int b);//change group col(include 3 col)
+        void rotate(int n);//n*90 degree
+        void flip(int n);//n=0:vertically;n=1,horizontally
+        void transform();
         
         void setBoard(const int set_board[]);
         int getElement(int index);
@@ -27,6 +27,7 @@ class Sudoku{
         bool checkCorrect();
     private:
         int _board[SIZE];
+        int _zeronum;
         //vector<int> _board;
         //_board.reserve(81);
 };
