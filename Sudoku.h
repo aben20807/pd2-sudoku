@@ -1,6 +1,7 @@
 #include<iostream>
 #include<cstring>
 #include<cstdlib>
+#include<iomanip>
 //#include<vector>
 #define SIZE 81
 
@@ -23,6 +24,7 @@ class Sudoku{
         void setBoard(const int set_board[]);
         int getElement(int index);
         void printBoard();
+        bool checkCorrect();
     private:
         int _board[SIZE];
         //vector<int> _board;

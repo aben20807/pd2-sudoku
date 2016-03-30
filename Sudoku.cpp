@@ -31,6 +31,68 @@ void Sudoku::printBoard()
         cout<<(((i+1)%9==0)?'\n':' ');
     }
 }
+bool Sudoku::checkCorrect()
+{
+    int i,num=0;
+    int check_tmp[27];
+    for(i=0;i<27;i++)check_tmp[i]=1;
+    //#define DEBUG_2//test check output
+    for(i=0;i<81;i++)
+    {
+        #ifdef DEBUG_2
+            cout<<i<<'\t';
+        #endif
+        check_tmp[num]*=_board[i];
+        if(i%9==8)
+        {
+            #ifdef DEBUG_2
+                cout<<setw(2)<<num<<":"<<check_tmp[num]<<endl;
+            #endif
+            if(check_tmp[num]!=362880)
+            {
+                return false;
+            }
+            num++;
+        }
+    }
+    for(i=0;i<81;i+=((i+9>80&&i!=80)?(-71):9))
+    {
+        #ifdef DEBUG_2
+            cout<<i<<'\t';
+        #endif
+        check_tmp[num]*=_board[i];
+        if(i+9>80)
+        {
+            #ifdef DEBUG_2
+                cout<<setw(2)<<num<<":"<<check_tmp[num]<<endl;
+            #endif
+            if(check_tmp[num]!=362880)
+            {
+                return false;
+            }
+            num++;
+        }
+    }
+    for(i=0;i<81;i+=((i%3==2&&i!=26&&i!=53)?((i==20||i==23||i==47||i==50||i==74||i==77)?(-17):7):1))
+    {
+        #ifdef DEBUG_2
+            cout<<i<<'\t';
+        #endif
+        check_tmp[num]*=_board[i];
+        if(i==20||i==23||i==26||i==47||i==50||i==53||i==74||i==77||i==80)
+        {
+            #ifdef DEBUG_2
+                cout<<setw(2)<<num<<":"<<check_tmp[num]<<endl;
+            #endif
+            if(check_tmp[num]!=362880)
+            {
+                return false;
+            }
+            //i-=18;
+            num++;
+        }
+    }
+}
 void Sudoku::giveQuestion()
 {
     int give_board[SIZE]={0,0,7,0,0,2,0,0,0,
@@ -102,7 +164,7 @@ void Sudoku::rotate(int n)
 {
     n%=4;
     //cout<<n<<endl;
-    int i,j,tmp;
+    int i,j;
     if(n==0);
     else if(n==1)
     { 
@@ -149,6 +211,7 @@ void Sudoku::flip(int n)
     {
         for(i=0,j=72;i<36;i++,j+=((j%9==8)?(-17):1))
         {
+            //cout<<i<<" "<<j<<endl; 
             tmp=_board[i];
             _board[i]=_board[j];
             _board[j]=tmp;
@@ -156,8 +219,9 @@ void Sudoku::flip(int n)
     }
     else if(n==1)
     {
-        for(i=0,j=8;i<75;i+=((i%4==3)?6:1),j+=((j%4==1)?11:(-1)))
+        for(i=0,j=8;i<76;i+=((i%9==3)?6:1),j+=((j%9==5)?12:(-1)))
         {
+            //cout<<i<<" "<<j<<endl; 
             tmp=_board[i];
             _board[i]=_board[j];
             _board[j]=tmp;
@@ -168,35 +232,47 @@ void Sudoku::flip(int n)
 void Sudoku::transform()
 {
     srandom(time(NULL));
-    int a,b;
+    int n,a,b;
+    n=random()%15+5;
     //#define DEBUG_1//test random output
-    a=random()%9+1;
-    b=random()%9+1;
-    #ifdef DEBUG_1
-        cout<<a<<" "<<b<<endl;
-    #endif
-    changeNum(a,b);
-    a=random()%3;
-    b=random()%3;
-    #ifdef DEBUG_1
-        cout<<a<<" "<<b<<endl;
-    #endif
-    changeRow(a,b);
-    a=random()%3;
-    b=random()%3;
-    #ifdef DEBUG_1
-        cout<<a<<" "<<b<<endl;
-    #endif
-    changeCol(a,b);
-    a=random()%101;
-    #ifdef DEBUG_1
-        cout<<a<<endl;
-    #endif
-    rotate(a);
-    a=random()%2;
-    #ifdef DEBUG_1
-        cout<<a<<endl;
-    #endif
-    flip(a);
+    while(n--)
+    {
+        #ifdef DEBUG_1
+            cout<<n<<":"<<endl;
+        #endif
+        a=random()%9+1;
+        b=random()%9+1;
+        #ifdef DEBUG_1
+            cout<<a<<" "<<b<<endl;
+            printBoard();
+        #endif
+        changeNum(a,b);
+        a=random()%3;
+        b=random()%3;
+        #ifdef DEBUG_1
+            cout<<a<<" "<<b<<endl;
+            printBoard();
+        #endif
+        changeRow(a,b);
+        a=random()%3;
+        b=random()%3;
+        #ifdef DEBUG_1
+            cout<<a<<" "<<b<<endl;
+            printBoard();
+        #endif
+        changeCol(a,b);
+        a=random()%101;
+        #ifdef DEBUG_1
+            cout<<a<<endl;
+            printBoard();
+        #endif
+        rotate(a);
+        a=random()%2;
+        #ifdef DEBUG_1
+            cout<<a<<endl;
+            printBoard();
+        #endif
+        flip(a);
+    }
     printBoard();
 }
