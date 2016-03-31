@@ -38,7 +38,7 @@ bool Sudoku::checkCorrect()
     for(i=0;i<27;i++)check_tmp[i]=1;
     //#define DEBUG_2//test check output
     for(i=0;i<81;i++)
-    {
+    {//row
         #ifdef DEBUG_2
             cout<<i<<'\t';
         #endif
@@ -56,7 +56,7 @@ bool Sudoku::checkCorrect()
         }
     }
     for(i=0;i<81;i+=((i+9>80&&i!=80)?(-71):9))
-    {
+    {//col
         #ifdef DEBUG_2
             cout<<i<<'\t';
         #endif
@@ -74,7 +74,7 @@ bool Sudoku::checkCorrect()
         }
     }
     for(i=0;i<81;i+=((i%3==2&&i!=26&&i!=53)?((i==20||i==23||i==47||i==50||i==74||i==77)?(-17):7):1))
-    {
+    {//cell
         #ifdef DEBUG_2
             cout<<i<<'\t';
         #endif
@@ -90,6 +90,184 @@ bool Sudoku::checkCorrect()
             }
             num++;
         }
+    }
+}
+/*bool Sudoku::checkUnity(int arr[])
+{
+    int i;
+    int unity[9];
+    memset(unity,0,sizeof(unity));
+    //for(i=0;i<9;i++)
+    {
+        //cout<<unity[i];
+    }//cout<<endl;
+    for(i=0;i<9;i++)
+    {
+        unity[arr[i]-1]++;
+        //cout<<i<<":"<<arr[i]<<":"<<unity[arr[i]-1]<<endl;
+    }
+    for(i=0;i<9;i++)
+    {
+        cout<<unity[i]<<" ";
+        if(unity[arr[i]-1]>1)return false;
+    }
+    cout<<endl;
+    return true;
+}*/
+/*bool Sudoku::checkIndexCorrect(int index)
+{//check index's row,col,cell correct
+    int i,j,col,row,cell;
+    int check_arr[9];
+    col=index%9;
+    row=static_cast<int>(index/9);
+    cell=(static_cast<int>(row/3))*3+(static_cast<int>(col/3));
+    for(i=0,j=9*row;i<9;i++,j++)//row
+    {
+        check_arr[i]=_board[j];
+        //cout<<check_arr[i]<<" ";
+    }//cout<<endl;
+    if(checkUnity(check_arr)==false)
+    {
+        //cout<<"f:"<<index<<" ";
+        return false;
+    }
+    for(i=0,j=col;i<9;i++,j+=9)
+    {
+        check_arr[i]=_board[j];
+    }
+    if(checkUnity(check_arr)==false)
+    {
+        return false;
+    }
+    switch(cell)
+    {
+        case 0:
+        case 1:
+        case 2:
+            j=cell*3;
+            break;
+        case 3:
+        case 4:
+        case 5:
+            j=cell*3+18;
+            break;
+        case 6:
+        case 7:
+        case 8:
+            j=cell*3+36;
+            break;
+    }
+    for(i=0,j;i<9;i++,j+=((j%3==2)?7:1))
+    {
+        check_arr[i]=_board[j];
+    }
+    if(checkUnity(check_arr)==false)
+    {
+        return false;
+    }
+    //cout<<"T"<<endl;
+    return true;
+}*/
+/*bool Sudoku::insert(int index)
+{
+    int j;
+    for(j=1;j<=9;j++)
+    {//insert 1 to 9
+        _board[index]=j;
+        if(checkIndexCorrect(i)==false&&j!=9)
+        {
+            //cout<<1<<" ";
+            continue;
+        }
+        else if(checkIndexCorrect(i)==false&&index!=0)
+        {
+            _board[i]=0;
+            //cout<<2<<" ";
+            
+            break;
+        }
+        else if(checkIndexCorrect(i)==false&&i==initnum)
+        {
+            //cout<<0<<endl;
+            exit(1);
+        }
+        else
+        {
+            //cout<<j;
+        }
+    }
+}*/
+bool Sudoku::checkUnity(int index)
+{
+    int col,row,cell,i,j;
+    col=index%9;
+    row=static_cast<int>(index/9);
+    cell=(static_cast<int>(row/3))*3+(static_cast<int>(col/3));
+    for(i=0,j=9*row;i<9;i++,j++)//row
+    {
+        if(_board[index]==_board[j]&&j!=index)
+        {
+            return false;
+        }
+    }
+    for(i=0,j=col;i<9;i++,j+=9)
+    {
+        if(_board[index]==_board[j]&&j!=index)
+        {
+            return false;
+        }
+    }
+    switch(cell)
+    {
+        case 0:
+        case 1:
+        case 2:
+            j=cell*3;
+            break;
+        case 3:
+        case 4:
+        case 5:
+            j=cell*3+18;
+            break;
+        case 6:
+        case 7:
+        case 8:
+            j=cell*3+36;
+            break;
+    }
+    for(i=0,j;i<9;i++,j+=((j%3==2)?7:1))
+    {
+        if(_board[index]==_board[j]&&j!=index)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+void Sudoku::backtrace(int num)
+{
+    if(num==81)
+    {
+        printBoard();
+    }
+    int col,row,i;
+    col=num%9;
+    row=static_cast<int>(num/9);
+    if(_board[num]==0)
+    {
+        for(i=1;i<=9;i++)
+        {
+            _board[num]=i;
+            if(checkUnity(num))
+            {
+                backtrace(num+1);
+            }
+        }
+        _board[num]=0;
+    }
+    else
+    {
+        backtrace(num+1);
     }
 }
 void Sudoku::giveQuestion()
@@ -141,7 +319,61 @@ void Sudoku::solve()
     {
         cout<<2<<endl;
     }
+    else
+    {
+        backtrace(0);
+    }
 }
+/*{
+    int col,row,cell,flag,initnum;
+    int i,j,k;
+    //cout<<_zeronum<<endl;
+    if(_zeronum>64)
+    {
+        cout<<2<<endl;
+    }
+    flag=1;
+    for(i=0;i<SIZE;i++)
+    {
+        if(_board[i]==0)//if empty
+        {
+            if(flag)
+            {//record the first 0 element's index
+                initnum=i;
+                flag=0;
+            }
+            col=i%9;
+            row=static_cast<int>(i/9);
+            cell=(static_cast<int>(row/3))*3+(static_cast<int>(col/3));
+            //cout<<row<<" "<<col<<" "<<cell<<endl;
+            for(j=1;j<=9;j++)
+            {//insert 1 to 9
+                _board[i]=j;
+                if(checkIndexCorrect(i)==false&&j!=9)
+                {
+                    //cout<<1<<" ";
+                    continue;
+                }
+                else if(checkIndexCorrect(i)==false&&i!=0)
+                {
+                    _board[i]=0;
+                    //cout<<2<<" ";
+                    i--;
+                    break;
+                }
+                else if(checkIndexCorrect(i)==false&&i==initnum)
+                {
+                    //cout<<0<<endl;
+                    exit(1);
+                }
+                else
+                {
+                    //cout<<j;
+                }
+            }
+        }
+    }
+}*/
 void Sudoku::changeNum(int a,int b)
 {
     int i;

@@ -3,8 +3,11 @@
 int main()
 {
     Sudoku ss;
-    ss.readIn();
-    ss.solve();
-    ss.printBoard();
+    //while(1)
+    {
+        ss.readIn();
+        ss.solve();
+    }
+    //ss.printBoard();
     return 0;
 }

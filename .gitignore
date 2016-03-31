@@ -1,4 +1,7 @@
 *.o
-*.exe
 transform.exe.stackdump
 *.in
+solve.exe
+giveQuestion.exe
+transform.exe
+*.exe

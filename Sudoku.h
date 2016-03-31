@@ -25,6 +25,9 @@ class Sudoku{
         int getElement(int index);
         void printBoard();
         bool checkCorrect();
+        bool checkUnity(int index);
+        bool checkIndexCorrect(int index);
+        void backtrace(int num);
     private:
         int _board[SIZE];
         int _zeronum;
