@@ -31,6 +31,15 @@ void Sudoku::printBoard()
         cout<<(((i+1)%9==0)?'\n':' ');
     }
 }
+void Sudoku::printSolve()
+{
+    int i;
+    for(i=0;i<SIZE;i++)
+    {
+        cout<<_solveboard[i];
+        cout<<(((i+1)%9==0)?'\n':' ');
+    }
+}
 bool Sudoku::checkCorrect()
 {
     int i,num=0;
@@ -92,133 +101,43 @@ bool Sudoku::checkCorrect()
         }
     }
 }
-/*bool Sudoku::checkUnity(int arr[])
+bool Sudoku::checkProblem()
 {
     int i;
-    int unity[9];
-    memset(unity,0,sizeof(unity));
-    //for(i=0;i<9;i++)
+    for(i=0;i<SIZE;i++)
     {
-        //cout<<unity[i];
-    }//cout<<endl;
-    for(i=0;i<9;i++)
-    {
-        unity[arr[i]-1]++;
-        //cout<<i<<":"<<arr[i]<<":"<<unity[arr[i]-1]<<endl;
+        if(_board[i]!=0)
+        {
+            if(checkIndexCorrect(i)==false)
+            {
+                return false;
+            }
+        }
     }
-    for(i=0;i<9;i++)
-    {
-        cout<<unity[i]<<" ";
-        if(unity[arr[i]-1]>1)return false;
-    }
-    cout<<endl;
     return true;
-}*/
-/*bool Sudoku::checkIndexCorrect(int index)
-{//check index's row,col,cell correct
-    int i,j,col,row,cell;
-    int check_arr[9];
-    col=index%9;
-    row=static_cast<int>(index/9);
-    cell=(static_cast<int>(row/3))*3+(static_cast<int>(col/3));
-    for(i=0,j=9*row;i<9;i++,j++)//row
-    {
-        check_arr[i]=_board[j];
-        //cout<<check_arr[i]<<" ";
-    }//cout<<endl;
-    if(checkUnity(check_arr)==false)
-    {
-        //cout<<"f:"<<index<<" ";
-        return false;
-    }
-    for(i=0,j=col;i<9;i++,j+=9)
-    {
-        check_arr[i]=_board[j];
-    }
-    if(checkUnity(check_arr)==false)
-    {
-        return false;
-    }
-    switch(cell)
-    {
-        case 0:
-        case 1:
-        case 2:
-            j=cell*3;
-            break;
-        case 3:
-        case 4:
-        case 5:
-            j=cell*3+18;
-            break;
-        case 6:
-        case 7:
-        case 8:
-            j=cell*3+36;
-            break;
-    }
-    for(i=0,j;i<9;i++,j+=((j%3==2)?7:1))
-    {
-        check_arr[i]=_board[j];
-    }
-    if(checkUnity(check_arr)==false)
-    {
-        return false;
-    }
-    //cout<<"T"<<endl;
-    return true;
-}*/
-/*bool Sudoku::insert(int index)
-{
-    int j;
-    for(j=1;j<=9;j++)
-    {//insert 1 to 9
-        _board[index]=j;
-        if(checkIndexCorrect(i)==false&&j!=9)
-        {
-            //cout<<1<<" ";
-            continue;
-        }
-        else if(checkIndexCorrect(i)==false&&index!=0)
-        {
-            _board[i]=0;
-            //cout<<2<<" ";
-            
-            break;
-        }
-        else if(checkIndexCorrect(i)==false&&i==initnum)
-        {
-            //cout<<0<<endl;
-            exit(1);
-        }
-        else
-        {
-            //cout<<j;
-        }
-    }
-}*/
-bool Sudoku::checkUnity(int index)
+}
+bool Sudoku::checkIndexCorrect(int index)
 {
     int col,row,cell,i,j;
     col=index%9;
     row=static_cast<int>(index/9);
     cell=(static_cast<int>(row/3))*3+(static_cast<int>(col/3));
-    for(i=0,j=9*row;i<9;i++,j++)//row
+    for(i=0,j=9*row;i<9;i++,j++)//row check
     {
         if(_board[index]==_board[j]&&j!=index)
-        {
+        {//if check index has the same number return false
             return false;
         }
     }
-    for(i=0,j=col;i<9;i++,j+=9)
+    for(i=0,j=col;i<9;i++,j+=9)//col check
     {
         if(_board[index]==_board[j]&&j!=index)
-        {
+        {//if check index has the same number return false
             return false;
         }
     }
-    switch(cell)
-    {
+    switch(cell)//cell check
+    {//using switch to get the cell's first index
         case 0:
         case 1:
         case 2:
@@ -238,19 +157,33 @@ bool Sudoku::checkUnity(int index)
     for(i=0,j;i<9;i++,j+=((j%3==2)?7:1))
     {
         if(_board[index]==_board[j]&&j!=index)
-        {
+        {//if check index has the same number return false
             return false;
         }
     }
-    return true;
+    return true;//if all correct return true
 }
 void Sudoku::backtrace(int num)
 {
-    if(num==81)
+    int i,solve_count=0;
+    /*if(num==SIZE)//can comment out to see all solutions
     {
         printBoard();
+    }*/
+    if(num==SIZE)//trace finish
+    {
+        for(i=0;i<SIZE;i++)
+        {//store first solution to check have any other solution
+            _solveboard[i]=_board[i];
+        }
+        _solvenum++;
+        if(_solvenum>1)
+        {//more than 1 solution
+            return ;
+        }
+        else;
     }
-    int col,row,i;
+    int col,row;
     col=num%9;
     row=static_cast<int>(num/9);
     if(_board[num]==0)
@@ -258,12 +191,12 @@ void Sudoku::backtrace(int num)
         for(i=1;i<=9;i++)
         {
             _board[num]=i;
-            if(checkUnity(num))
+            if(checkIndexCorrect(num))
             {
                 backtrace(num+1);
             }
         }
-        _board[num]=0;
+        _board[num]=0;//back
     }
     else
     {
@@ -305,75 +238,46 @@ void Sudoku::readIn()
     for(i=0;i<SIZE;i++)
     {
         cin>>in_board[i];
-        if(in_board[i]==0)
+        /*if(in_board[i]==0)//count the zero's number
         {
             _zeronum++;
-        }
+        }*/
     }
     setBoard(in_board);
 }
 void Sudoku::solve()
 {
+    int solve_count=0;
+    _solvenum=0;
     //cout<<_zeronum<<endl;
-    if(_zeronum>64)
+    /*if(_zeronum>64)//there is no solution if numbers are less than 17 
     {
         cout<<2<<endl;
+    }*/
+    //else
+    if(checkProblem()==true)
+    {
+        backtrace(0);
+        solve_count++;
+        switch(_solvenum)
+        {
+            case 0://no solution
+                cout<<0;
+                break;
+            case 1://only 1 solution
+                cout<<1<<endl;
+                printSolve();
+                break;
+            default://more than 1 solution
+                cout<<2;
+                break;
+        }
     }
     else
     {
-        backtrace(0);
+        cout<<0;
     }
 }
-/*{
-    int col,row,cell,flag,initnum;
-    int i,j,k;
-    //cout<<_zeronum<<endl;
-    if(_zeronum>64)
-    {
-        cout<<2<<endl;
-    }
-    flag=1;
-    for(i=0;i<SIZE;i++)
-    {
-        if(_board[i]==0)//if empty
-        {
-            if(flag)
-            {//record the first 0 element's index
-                initnum=i;
-                flag=0;
-            }
-            col=i%9;
-            row=static_cast<int>(i/9);
-            cell=(static_cast<int>(row/3))*3+(static_cast<int>(col/3));
-            //cout<<row<<" "<<col<<" "<<cell<<endl;
-            for(j=1;j<=9;j++)
-            {//insert 1 to 9
-                _board[i]=j;
-                if(checkIndexCorrect(i)==false&&j!=9)
-                {
-                    //cout<<1<<" ";
-                    continue;
-                }
-                else if(checkIndexCorrect(i)==false&&i!=0)
-                {
-                    _board[i]=0;
-                    //cout<<2<<" ";
-                    i--;
-                    break;
-                }
-                else if(checkIndexCorrect(i)==false&&i==initnum)
-                {
-                    //cout<<0<<endl;
-                    exit(1);
-                }
-                else
-                {
-                    //cout<<j;
-                }
-            }
-        }
-    }
-}*/
 void Sudoku::changeNum(int a,int b)
 {
     int i;
@@ -396,6 +300,7 @@ void Sudoku::changeRow(int a,int b)
     int i,j,tmp;
     for(i=a*27,j=b*27;i<a*27+27;i++,j++)
     {
+        //cout<<i<<" "<<j<<endl;
         tmp=_board[i];
         _board[i]=_board[j];
         _board[j]=tmp;
@@ -414,7 +319,7 @@ void Sudoku::changeCol(int a,int b)
 }
 void Sudoku::rotate(int n)
 {
-    n%=4;
+    n%=4;//n is 4 times for one cycle
     //cout<<n<<endl;
     int i,j;
     if(n==0);
@@ -485,7 +390,7 @@ void Sudoku::transform()
 {
     srandom(time(NULL));
     int n,a,b;
-    n=random()%15+5;
+    n=random()%15+5;//random the change times
     //#define DEBUG_1//test random output
     while(n--)
     {

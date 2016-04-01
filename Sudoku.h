@@ -2,7 +2,6 @@
 #include<cstring>
 #include<cstdlib>
 #include<iomanip>
-//#include<vector>
 #define SIZE 81
 
 using namespace std;
@@ -11,7 +10,7 @@ class Sudoku{
         Sudoku();
         Sudoku(const int init_board[]);
         
-        void giveQuestion();//出題
+        void giveQuestion();
         void readIn();
         void solve();
         void changeNum(int a,int b);
@@ -24,13 +23,16 @@ class Sudoku{
         void setBoard(const int set_board[]);
         int getElement(int index);
         void printBoard();
+        
+    private:
+        void printSolve();
         bool checkCorrect();
-        bool checkUnity(int index);
+        bool checkProblem();
         bool checkIndexCorrect(int index);
         void backtrace(int num);
-    private:
+        
         int _board[SIZE];
         int _zeronum;
-        //vector<int> _board;
-        //_board.reserve(81);
+        int _solvenum;
+        int _solveboard[SIZE];
 };

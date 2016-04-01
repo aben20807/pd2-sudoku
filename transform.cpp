@@ -12,10 +12,11 @@ int main()
     //ss.flip(0);
     ss.transform();
     //ss.printBoard();
-    cout<<endl;
+    /*cout<<endl;
     if(ss.checkCorrect())
         cout<<"yes"<<endl;
     else 
         cout<<"no"<<endl;
+    */
     return 0;
 }
