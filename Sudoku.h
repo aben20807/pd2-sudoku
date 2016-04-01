@@ -27,7 +27,7 @@ class Sudoku{
     private:
         void printSolve();
         bool checkCorrect();
-        bool checkProblem();
+        bool checkQuestion();
         bool checkIndexCorrect(int index);
         void backtrace(int num);
         

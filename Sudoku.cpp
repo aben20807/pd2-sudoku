@@ -23,7 +23,7 @@ int Sudoku::getElement(int index)
     return _board[index];    
 }
 void Sudoku::printBoard()
-{
+{//print out the _board[]
     int i;
     for(i=0;i<SIZE;i++)
     {
@@ -32,7 +32,7 @@ void Sudoku::printBoard()
     }
 }
 void Sudoku::printSolve()
-{
+{//print out the answer which store in _solveboard[]
     int i;
     for(i=0;i<SIZE;i++)
     {
@@ -41,13 +41,13 @@ void Sudoku::printSolve()
     }
 }
 bool Sudoku::checkCorrect()
-{
+{//using to check whole board
     int i,num=0;
     int check_tmp[27];
     for(i=0;i<27;i++)check_tmp[i]=1;
     //#define DEBUG_2//test check output
     for(i=0;i<81;i++)
-    {//row
+    {//row check
         #ifdef DEBUG_2
             cout<<i<<'\t';
         #endif
@@ -65,7 +65,7 @@ bool Sudoku::checkCorrect()
         }
     }
     for(i=0;i<81;i+=((i+9>80&&i!=80)?(-71):9))
-    {//col
+    {//col check
         #ifdef DEBUG_2
             cout<<i<<'\t';
         #endif
@@ -83,7 +83,7 @@ bool Sudoku::checkCorrect()
         }
     }
     for(i=0;i<81;i+=((i%3==2&&i!=26&&i!=53)?((i==20||i==23||i==47||i==50||i==74||i==77)?(-17):7):1))
-    {//cell
+    {//cell check
         #ifdef DEBUG_2
             cout<<i<<'\t';
         #endif
@@ -101,8 +101,8 @@ bool Sudoku::checkCorrect()
         }
     }
 }
-bool Sudoku::checkProblem()
-{
+bool Sudoku::checkQuestion()
+{//because the question maybe wrong, solve after checking 
     int i;
     for(i=0;i<SIZE;i++)
     {
@@ -125,14 +125,14 @@ bool Sudoku::checkIndexCorrect(int index)
     for(i=0,j=9*row;i<9;i++,j++)//row check
     {
         if(_board[index]==_board[j]&&j!=index)
-        {//if check index has the same number return false
+        {//if check index has the same number then return false
             return false;
         }
     }
     for(i=0,j=col;i<9;i++,j+=9)//col check
     {
         if(_board[index]==_board[j]&&j!=index)
-        {//if check index has the same number return false
+        {//if check index has the same number then return false
             return false;
         }
     }
@@ -157,7 +157,7 @@ bool Sudoku::checkIndexCorrect(int index)
     for(i=0,j;i<9;i++,j+=((j%3==2)?7:1))
     {
         if(_board[index]==_board[j]&&j!=index)
-        {//if check index has the same number return false
+        {//if check index has the same number then return false
             return false;
         }
     }
@@ -186,36 +186,37 @@ void Sudoku::backtrace(int num)
     int col,row;
     col=num%9;
     row=static_cast<int>(num/9);
-    if(_board[num]==0)
+    if(_board[num]==0)//find where can insert number
     {
         for(i=1;i<=9;i++)
-        {
+        {//insert number from 1 to 9
             _board[num]=i;
             if(checkIndexCorrect(num))
             {
+                //cout<<num<<":"<<i<<endl;
                 backtrace(num+1);
             }
         }
-        _board[num]=0;//back
+        _board[num]=0;//back to up one level's for loop
     }
     else
-    {
+    {//if meet problem number, insert the next index
         backtrace(num+1);
     }
 }
 void Sudoku::giveQuestion()
 {
-    /*int give_board[SIZE]={0,0,7,0,0,2,0,0,0,
-                        0,1,0,0,0,0,0,0,9,
-                        0,5,0,0,4,0,0,0,6,
-                        0,9,0,0,0,0,0,0,1,
-                        0,7,0,5,0,0,0,3,0,
-                        6,0,0,0,0,7,0,5,0,
-                        4,0,0,0,6,0,0,2,0,
-                        8,0,0,0,0,0,0,1,0,
-                        0,0,0,1,0,0,3,0,0
-    };*/
-    int give_board[SIZE]={8,0,0,0,0,0,0,0,0,
+    int give_board[SIZE]={0,0,0,0,0,0,0,1,0,
+                        4,0,0,0,0,0,0,0,0,
+                        0,2,0,0,0,0,0,0,0,
+                        0,0,0,0,5,0,4,0,7,
+                        0,0,8,0,0,0,3,0,0,
+                        0,0,1,0,9,0,0,0,0,
+                        3,0,0,4,0,0,2,0,0,
+                        0,5,0,1,0,0,0,0,0,
+                        0,0,0,8,0,6,0,0,0
+    };
+    /*int give_board[SIZE]={8,0,0,0,0,0,0,0,0,
                         0,0,3,6,0,0,0,0,0,
                         0,7,0,0,9,0,2,0,0,
                         0,0,0,0,0,7,0,0,0,
@@ -224,8 +225,7 @@ void Sudoku::giveQuestion()
                         0,0,1,0,0,0,0,6,8,
                         0,0,8,5,0,0,0,1,0,
                         0,9,0,0,0,0,4,0,0
-
-    };
+    };*/
     setBoard(give_board);
     transform();
     //printBoard();
@@ -238,10 +238,10 @@ void Sudoku::readIn()
     for(i=0;i<SIZE;i++)
     {
         cin>>in_board[i];
-        /*if(in_board[i]==0)//count the zero's number
+        if(in_board[i]==0)//count the zero's number
         {
             _zeronum++;
-        }*/
+        }
     }
     setBoard(in_board);
 }
@@ -250,12 +250,11 @@ void Sudoku::solve()
     int solve_count=0;
     _solvenum=0;
     //cout<<_zeronum<<endl;
-    /*if(_zeronum>64)//there is no solution if numbers are less than 17 
+    if(checkQuestion()&&_zeronum>64)//there is no solution if numbers are less than 17 
     {
         cout<<2<<endl;
-    }*/
-    //else
-    if(checkProblem()==true)
+    }
+    else if(checkQuestion())
     {
         backtrace(0);
         solve_count++;
@@ -273,7 +272,7 @@ void Sudoku::solve()
                 break;
         }
     }
-    else
+    else//problem is wrong
     {
         cout<<0;
     }
@@ -365,7 +364,7 @@ void Sudoku::flip(int n)
 {
     int i,j,tmp;
     if(n==0)
-    {
+    {//vertically flip
         for(i=0,j=72;i<36;i++,j+=((j%9==8)?(-17):1))
         {
             //cout<<i<<" "<<j<<endl; 
@@ -375,7 +374,7 @@ void Sudoku::flip(int n)
         }
     }
     else if(n==1)
-    {
+    {//horizontally flip
         for(i=0,j=8;i<76;i+=((i%9==3)?6:1),j+=((j%9==5)?12:(-1)))
         {
             //cout<<i<<" "<<j<<endl; 
