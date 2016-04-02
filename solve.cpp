@@ -10,7 +10,7 @@ int main()
         //ss.transform();
         cout<<endl;
         //ss.solve();
-        ss.solve2();
+        ss.solve();
     }
     //ss.printBoard();
     return 0;

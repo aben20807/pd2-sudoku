@@ -13,7 +13,7 @@ class Sudoku{
         
         void giveQuestion();
         void readIn();
-        void solve();
+        void solveBacktrace();//solve by using backtrace
         void changeNum(int a,int b);
         void changeRow(int a,int b);//change group row(include 3 row)
         void changeCol(int a,int b);//change group col(include 3 col)
@@ -25,7 +25,7 @@ class Sudoku{
         int getElement(int index);
         void printBoard();
         
-        void solve2();
+        void solve();//solve by using DLX(Dancing Links and Algorithm X)
     private:
         struct Node
         {

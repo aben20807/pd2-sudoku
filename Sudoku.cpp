@@ -46,7 +46,7 @@ bool Sudoku::checkCorrect()
     int check_tmp[27];
     for(i=0;i<27;i++)check_tmp[i]=1;
     //#define DEBUG_2//test check output
-    for(i=0;i<81;i++)
+    for(i=0;i<SIZE;i++)
     {//row check
         #ifdef DEBUG_2
             cout<<i<<'\t';
@@ -64,7 +64,7 @@ bool Sudoku::checkCorrect()
             num++;
         }
     }
-    for(i=0;i<81;i+=((i+9>80&&i!=80)?(-71):9))
+    for(i=0;i<SIZE;i+=((i+9>80&&i!=80)?(-71):9))
     {//col check
         #ifdef DEBUG_2
             cout<<i<<'\t';
@@ -82,7 +82,7 @@ bool Sudoku::checkCorrect()
             num++;
         }
     }
-    for(i=0;i<81;i+=((i%3==2&&i!=26&&i!=53)?((i==20||i==23||i==47||i==50||i==74||i==77)?(-17):7):1))
+    for(i=0;i<SIZE;i+=((i%3==2&&i!=26&&i!=53)?((i==20||i==23||i==47||i==50||i==74||i==77)?(-17):7):1))
     {//cell check
         #ifdef DEBUG_2
             cout<<i<<'\t';
@@ -245,7 +245,7 @@ void Sudoku::readIn()
     }
     setBoard(in_board);
 }
-void Sudoku::solve()
+void Sudoku::solveBacktrace()//solve by using backtrace
 {
     int solve_count=0;
     _solvenum=0;
@@ -547,29 +547,29 @@ bool Sudoku::dance(int k)
     uncoverCol(pmin);
     return false;
 }
-int getRowIndex(int rowNum)  
+int getRowIndex(int row_num)  
 {
-    int num=rowNum%9;  
-    int rowIndex=rowNum/ 81;  
-    return 81+rowIndex*9+num;  
+    int num=row_num%9;  
+    int row_index=row_num/ 81;  
+    return 81+row_index*9+num;  
 }
-int getColIndex(int rowNum)  
+int getColIndex(int row_num)  
 {
-    int num=rowNum%9;
-    int index=rowNum/9;
-    int colIndex=index%9;  
-    return 162+colIndex*9+num;  
+    int num=row_num%9;
+    int index=row_num/9;
+    int col_index=index%9;  
+    return 162+col_index*9+num;  
 }
-int getCellIndex(int rowNum)  
+int getCellIndex(int row_num)  
 {
-    int num=rowNum%9;
-    int index=rowNum/9; 
-    int rowIndex=index/9;
-    int colIndex=index%9;
-    int cellIndex=int(rowIndex/3)*3+colIndex/3;  
-    return 243+cellIndex*9+num;  
+    int num=row_num%9;
+    int index=row_num/9; 
+    int row_index=index/9;
+    int col_index=index%9;
+    int cell_index=int(row_index/3)*3+col_index/3;  
+    return 243+cell_index*9+num;  
 }
-void Sudoku::solve2()
+void Sudoku::solve()//solve by using DLX(Dancing Links and Algorithm X)
 {
     int i,j,nodecount=0;
     initDlx();
@@ -578,10 +578,8 @@ void Sudoku::solve2()
     {
         index=static_cast<int>(i/9);
         //cout<<index<<":"<<_board[index]<<" "<<i%9<<endl;
-        if(_board[index]==0||_board[index]-1==i%9)
-        {//if _board[index]==0 then add all possibility, 
-         //i.e. assume insert form 1 to 9 in this grid, so it will have 9*4 correspond in DLX board.
-         //Or if _board[index] has been inserted number then add 4 corresponds in DLX board.
+        if(_board[index]-1==i%9)//add question first
+        {//if _board[index] has been inserted number then add 4 corresponds in DLX board.
             nodecount++;
             //cout<<nodecount<<endl;
             int rowindex=i,colindex=index;
@@ -589,27 +587,17 @@ void Sudoku::solve2()
             addNode(rowindex,getRowIndex(i));
             addNode(rowindex,getColIndex(i));
             addNode(rowindex,getCellIndex(i));
+            col[i].questionnum++;//record the number of question in each col
         }
-        /*if(_board[index]-1==i%9)
-        {//if _board[index]==0 then add all possibility, 
-         //i.e. assume insert form 1 to 9 in this grid, so it will have 9*4 correspond in DLX board.
-         //Or if _board[index] has been inserted number then add 4 corresponds in DLX board.
-            nodecount++;
-            //cout<<nodecount<<endl;
-            int rowindex=i,colindex=index;
-            addNode(rowindex,colindex);
-            addNode(rowindex,getRowIndex(i));
-            addNode(rowindex,getColIndex(i));
-            addNode(rowindex,getCellIndex(i));
-            col[i].questionnum++;
-        }*/
     }
-    /*for(i=0;i<DLX_R;i++)
+    for(i=0;i<DLX_R;i++)
     {
         index=static_cast<int>(i/9);
         //cout<<col[i].questionnum<<endl;
-        if(_board[index]==0&&col[i].questionnum==0)
-        {
+        if(_board[index]==0&&col[i].questionnum==0)//add empty place
+        {//if _board[index]==0 then add all possibility, 
+         //i.e. assume insert form 1 to 9 in this grid, so it will have 9*4 correspond in DLX board.
+         //BUT if this col has had question number then it do not need to insert again or it will waste time and space.
             nodecount++;
             //cout<<nodecount<<endl;
             int rowindex=i,colindex=index;
@@ -618,7 +606,7 @@ void Sudoku::solve2()
             addNode(rowindex,getColIndex(i));
             addNode(rowindex,getCellIndex(i));
         }
-    }*/
+    }
     _solvenum=0; 
     dance(0);
     switch(_solvenum)
