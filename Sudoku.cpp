@@ -40,6 +40,8 @@ void Sudoku::printSolve()
         cout<<(((i+1)%9==0)?'\n':' ');
     }
 }
+//#define BACKTRACE
+#ifdef BACKTRACE
 bool Sudoku::checkCorrect()
 {//using to check whole board
     int i,num=0;
@@ -163,6 +165,8 @@ bool Sudoku::checkIndexCorrect(int index)
     }
     return true;//if all correct return true
 }
+#endif
+#ifdef BACKTRACE
 void Sudoku::backtrace(int num)
 {
     int i,solve_count=0;
@@ -204,9 +208,10 @@ void Sudoku::backtrace(int num)
         backtrace(num+1);
     }
 }
+#endif
 void Sudoku::giveQuestion()
 {
-    int give_board[SIZE]={0,0,0,0,0,0,0,1,0,
+    /*int give_board[SIZE]={0,0,0,0,0,0,0,1,0,
                         4,0,0,0,0,0,0,0,0,
                         0,2,0,0,0,0,0,0,0,
                         0,0,0,0,5,0,4,0,7,
@@ -215,17 +220,17 @@ void Sudoku::giveQuestion()
                         3,0,0,4,0,0,2,0,0,
                         0,5,0,1,0,0,0,0,0,
                         0,0,0,8,0,6,0,0,0
-    };
-    /*int give_board[SIZE]={8,0,0,0,0,0,0,0,0,
+    };*/
+    int give_board[SIZE]={8,0,0,0,0,0,0,0,0,
                         0,0,3,6,0,0,0,0,0,
                         0,7,0,0,9,0,2,0,0,
-                        0,0,0,0,0,7,0,0,0,
+                        0,5,0,0,0,7,0,0,0,
                         0,0,0,0,4,5,7,0,0,
                         0,0,0,1,0,0,0,3,0,
                         0,0,1,0,0,0,0,6,8,
                         0,0,8,5,0,0,0,1,0,
                         0,9,0,0,0,0,4,0,0
-    };*/
+    };
     setBoard(give_board);
     transform();
     //printBoard();
@@ -238,13 +243,16 @@ void Sudoku::readIn()
     for(i=0;i<SIZE;i++)
     {
         cin>>in_board[i];
+        #ifdef BACKTRACE
         if(in_board[i]==0)//count the zero's number
         {
             _zeronum++;
         }
+        #endif
     }
     setBoard(in_board);
 }
+#ifdef BACKTRACE
 void Sudoku::solveBacktrace()//solve by using backtrace
 {
     int solve_count=0;
@@ -277,6 +285,7 @@ void Sudoku::solveBacktrace()//solve by using backtrace
         cout<<0;
     }
 }
+#endif
 void Sudoku::changeNum(int a,int b)
 {
     int i;
