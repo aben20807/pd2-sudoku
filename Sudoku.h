@@ -3,7 +3,8 @@
 #include<cstdlib>
 #include<iomanip>
 #define SIZE 81
-
+#define DLX_R 9*SIZE
+#define DLX_C 4*SIZE
 using namespace std;
 class Sudoku{
     public:
@@ -24,7 +25,28 @@ class Sudoku{
         int getElement(int index);
         void printBoard();
         
+        void solve2();
     private:
+        struct Node
+        {
+            Node *up;
+            Node *down;
+            Node *left;
+            Node *right;
+            Node *root;//the head of each col
+            int row;//the location of row 
+            int nodesum;//the sum of each col
+            int questionnum;
+        };
+        Node *nodes,*row,*col,*head;
+        int rownum,colnum,nodecount;
+        int *result,resultcount;
+        void initDlx();
+        void coverCol(Node *t);
+        void uncoverCol(Node *t);
+        bool dance(int k);
+        void addNode(int r,int c);
+        
         void printSolve();
         bool checkCorrect();
         bool checkQuestion();

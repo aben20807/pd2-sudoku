@@ -7,9 +7,10 @@ int main()
     {
         ss.readIn();
         ss.printBoard();
-        ss.transform();
+        //ss.transform();
         cout<<endl;
-        ss.solve();
+        //ss.solve();
+        ss.solve2();
     }
     //ss.printBoard();
     return 0;

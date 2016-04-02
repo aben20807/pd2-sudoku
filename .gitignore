@@ -1,7 +1,5 @@
 *.o
-transform.exe.stackdump
 *.in
-solve.exe
-giveQuestion.exe
-transform.exe
 *.exe
+transform.exe.stackdump
+solve.exe.stackdump
