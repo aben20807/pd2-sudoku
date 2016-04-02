@@ -9,8 +9,8 @@ test.in and test2.in are for test.<br>
 <br>
 Can use "<" to input file into program<br>
 ex:<br>
-./solve_backtrace.exe < testH.in<br>
+./solve.exe < test.in<br>
 <br>
 Can use "time" to check time-consuming<br>
 ex:<br>
-time ./solve_backtrace.exe < testH.in<br>
+time ./solve.exe < test.in<br>
