@@ -242,15 +242,17 @@ void Sudoku::readIn()
     _zeronum=0;
     for(i=0;i<SIZE;i++)
     {
-        cin>>in_board[i];
+        cin>>_board[i];
+        //cin>>in_board[i];
         #ifdef BACKTRACE
-        if(in_board[i]==0)//count the zero's number
+        //if(in_board[i]==0)//count the zero's number
+        if(_board[i]==0)//count the zero's number
         {
             _zeronum++;
         }
         #endif
     }
-    setBoard(in_board);
+    //setBoard(in_board);
 }
 #ifdef BACKTRACE
 void Sudoku::solveBacktrace()//solve by using backtrace
